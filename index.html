@@ -186,7 +186,7 @@
             </div>
         </section>
 
-        <section id="proyectos" class="py-16 md:py-24 border-t-4 border-amber-200">
+        <section id="proyectos" class="py-16 md:py-24 border-t-4 border-teal-200">
             <div class="container mx-auto px-6 max-w-7xl">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Proyectos "Semilla" de Costo Cero</h2>
@@ -282,7 +282,7 @@
             </div>
         </section>
 
-        <section id="hoja-de-ruta" class="py-16 md:py-24 border-t-4 border-teal-200">
+        <section id="hoja-de-ruta" class="py-16 md:py-24 border-t-4 border-amber-200">
             <div class="container mx-auto px-6 max-w-7xl">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Plan de Acción de 90 Días</h2>
@@ -319,7 +319,6 @@
                 </div>
             </div>
         </section>
-
         <section id="unete" class="py-16 md:py-24 bg-teal-50/50 border-t-4 border-teal-200">
             <div class="container mx-auto px-6 max-w-7xl">
                 <div class="text-center mb-12">
@@ -349,19 +348,23 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="canton" class="block text-sm font-medium text-gray-700">Cantón</label>
+                                <input type="text" name="canton" id="canton" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+                            </div>
                              <div>
                                 <label for="edad" class="block text-sm font-medium text-gray-700">Edad (Opcional)</label>
                                 <input type="number" name="edad" id="edad" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
                             </div>
-                            <div>
-                                <label for="sexo" class="block text-sm font-medium text-gray-700">Sexo (Opcional)</label>
-                                <select id="sexo" name="sexo" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
-                                    <option>Prefiero no especificar</option>
-                                    <option>Femenino</option>
-                                    <option>Masculino</option>
-                                    <option>Otro</option>
-                                </select>
-                            </div>
+                        </div>
+                        <div>
+                            <label for="sexo" class="block text-sm font-medium text-gray-700">Sexo (Opcional)</label>
+                            <select id="sexo" name="sexo" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+                                <option>Prefiero no especificar</option>
+                                <option>Femenino</option>
+                                <option>Masculino</option>
+                                <option>Otro</option>
+                            </select>
                         </div>
                          <div>
                             <label for="disciplina" class="block text-sm font-medium text-gray-700">Disciplina Artística Principal</label>
