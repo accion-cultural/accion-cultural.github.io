@@ -449,6 +449,26 @@
                             </button>
                         </div>
                     </form>
+                    <div id="share-container" class="hidden text-center transition-opacity duration-500 ease-in-out">
+                        <div class="mb-4">
+                             <svg class="mx-auto h-12 w-12 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Registro exitoso!</h3>
+                        <p class="text-gray-600 mb-6">Gracias por unirte. Ahora, ayúdanos a crecer la red. Comparte este plan de acción con otros artistas y gestores culturales de Loja para que más voces se sumen al cambio.</p>
+                        <div class="flex justify-center items-center space-x-4">
+                            <a id="share-facebook" href="#" target="_blank" title="Compartir en Facebook" class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                            </a>
+                            <a id="share-twitter" href="#" target="_blank" title="Compartir en X/Twitter" class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-800 hover:text-white transition-colors duration-300">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                            </a>
+                            <a id="share-whatsapp" href="#" target="_blank" title="Compartir en WhatsApp" class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 hover:bg-green-500 hover:text-white transition-colors duration-300">
+                                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zM12.04 20.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.38 0-4.54 3.69-8.23 8.24-8.23 4.54 0 8.23 3.69 8.23 8.23 0 4.54-3.69 8.23-8.23 8.23zm4.52-6.13c-.25-.12-1.47-.72-1.7-.82s-.39-.12-.56.12c-.17.25-.64.82-.79.98s-.29.17-.54.06c-.25-.12-1.06-.39-2.02-1.25s-1.45-1.94-1.62-2.27c-.17-.33-.02-.51.11-.63.12-.12.25-.29.37-.44s.17-.25.25-.41.12-.29.06-.54c-.06-.25-.56-1.34-.76-1.84s-.4-.42-.55-.42h-.48c-.17 0-.44.06-.67.29s-.87.85-.87 2.07.89 2.4 1.01 2.56c.12.17 1.76 2.68 4.27 3.77 2.51 1.08 2.51.72 2.96.69.45-.03 1.47-.6 1.68-1.18s.21-.54.15-.66z" /></svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -560,54 +580,71 @@
                 });
             });
 
+            // Form submission logic
             const form = document.getElementById('registro-form');
             const formMessage = document.getElementById('form-message');
             const submitButton = form.querySelector('button[type="submit"]');
-
+            const shareContainer = document.getElementById('share-container');
+            
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
-
-                const nombre = document.getElementById('nombre').value.trim();
-                const cedula = document.getElementById('cedula').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const telefono = document.getElementById('telefono').value.trim();
-                const canton = document.getElementById('canton').value.trim();
-                const privacy = document.getElementById('privacy').checked;
-
-                formMessage.textContent = '';
-                formMessage.classList.remove('text-red-600', 'text-green-600');
-
+            
+                // Simple validation
+                const requiredFields = ['nombre', 'cedula', 'email', 'telefono', 'canton'];
                 let errors = [];
-                if (!nombre) errors.push("Nombre");
-                if (!cedula) errors.push("Cédula");
-                if (!email) errors.push("Email");
-                if (!telefono) errors.push("Teléfono");
-                if (!canton) errors.push("Cantón");
-
+                requiredFields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (!field.value.trim()) {
+                        errors.push(field.previousElementSibling.textContent);
+                    }
+                });
+            
                 if (errors.length > 0) {
                     formMessage.textContent = `Por favor, complete los siguientes campos: ${errors.join(', ')}.`;
-                    formMessage.classList.add('text-red-600');
+                    formMessage.className = 'text-sm text-center text-red-600';
                     return;
                 }
-
-                if (!/^[0-9]{10}$/.test(cedula)) {
-                    formMessage.textContent = 'Por favor, ingrese un número de cédula válido de 10 dígitos.';
-                    formMessage.classList.add('text-red-600');
-                    return;
-                }
-
-                if (!privacy) {
-                    formMessage.textContent = 'Debe aceptar la política de uso de datos para continuar.';
-                    formMessage.classList.add('text-red-600');
-                    return;
-                }
-
-                const formData = new FormData(form);
-                const formAction = form.getAttribute('action');
                 
+                if (!/^[0-9]{10}$/.test(document.getElementById('cedula').value)) {
+                    formMessage.textContent = 'Por favor, ingrese un número de cédula válido de 10 dígitos.';
+                    formMessage.className = 'text-sm text-center text-red-600';
+                    return;
+                }
+            
+                if (!document.getElementById('privacy').checked) {
+                    formMessage.textContent = 'Debe aceptar la política de uso de datos para continuar.';
+                    formMessage.className = 'text-sm text-center text-red-600';
+                    return;
+                }
+            
                 submitButton.disabled = true;
                 submitButton.textContent = 'Enviando...';
-
+                
+                // Mock successful submission for demonstration
+                // In a real scenario, you would use fetch() to send data to a server.
+                /*setTimeout(() => {
+                    // Hide the form and its message
+                    form.style.display = 'none';
+                    formMessage.style.display = 'none';
+                    
+                    // Show the share container
+                    shareContainer.classList.remove('hidden');
+            
+                    // Set up dynamic share links
+                    const pageUrl = encodeURIComponent(window.location.href);
+                    const shareText = encodeURIComponent('¡Súmate a la acción! He encontrado este plan para potenciar la cultura en Loja y creo que te puede interesar. #AccionCulturalLoja');
+                    
+                    document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+                    document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${shareText}`;
+                    document.getElementById('share-whatsapp').href = `https://api.whatsapp.com/send?text=${shareText}%20${pageUrl}`;
+            
+                }, 1500); // Simulate a network request
+            
+                /*/
+                // REAL FETCH LOGIC (replace mock timeout with this)
+                const formData = new FormData(form);
+                const formAction = "https://www.antoniorigo.com/accion-cultural/index.php"; // Your endpoint
+                
                 fetch(formAction, {
                     method: 'POST',
                     body: formData,
@@ -615,21 +652,29 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message.includes('éxito')) {
-                        formMessage.textContent = data.message;
-                        formMessage.classList.add('text-green-600');
-                        form.reset();
+                        form.style.display = 'none';
+                        formMessage.style.display = 'none';
+                        shareContainer.classList.remove('hidden');
+            
+                        const pageUrl = encodeURIComponent(window.location.href);
+                        const shareText = encodeURIComponent('¡Súmate a la acción! He encontrado este plan para potenciar la cultura en Loja y creo que te puede interesar. #AccionCulturalLoja');
+                        
+                        document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+                        document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${shareText}`;
+                        document.getElementById('share-whatsapp').href = `https://api.whatsapp.com/send?text=${shareText}%20${pageUrl}`;
                     } else {
                         throw new Error(data.message);
                     }
                 })
                 .catch(error => {
                     formMessage.textContent = `Hubo un error: ${error.message}`;
-                    formMessage.classList.add('text-red-600');
+                    formMessage.className = 'text-sm text-center text-red-600';
                 })
                 .finally(() => {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Enviar Registro';
                 });
+                /**/
             });
         });
     </script>
