@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Acción Interactivo | Acción Cultural</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Teal -->
+    <!-- Application Structure Plan: Se ha diseñado una SPA tipo "dashboard estratégico" que transforma el denso informe en una experiencia interactiva y orientada a la acción. La estructura no es lineal, sino modular, permitiendo al usuario explorar las áreas de interés (Diagnóstico, Estrategia, Proyectos, Financiación, Hoja de Ruta) a través de una navegación fija. Se prioriza la visualización de datos clave (resultados electorales), la comparación interactiva de opciones complejas (forma jurídica) y la presentación clara de planes de acción (proyectos semilla, hoja de ruta de 90 días). Esta arquitectura se eligió para convertir un documento de planificación en una herramienta de trabajo viva, que motive y guíe al colectivo de manera más efectiva que un texto estático. -->
+    <!-- Visualization & Content Choices: 1. Resultados Electorales -> Meta: Reencuadrar la derrota como una base de apoyo sólida -> Viz: Gráfico de Donut -> Interacción: Hover para ver detalles -> Justificación: Visualiza de forma inmediata el 25% del electorado capturado, reforzando el concepto de "capital político" -> Librería: Chart.js. 2. Corporación vs. Cooperativa -> Meta: Facilitar una decisión estratégica clave -> Presentación: Comparador interactivo con botones -> Interacción: Clic para mostrar/ocultar detalles de cada opción -> Justificación: Transforma una tabla estática en una herramienta de decisión activa, guiando al usuario hacia la opción recomendada -> Método: Vanilla JS. 3. Proyectos Semilla -> Meta: Presentar oportunidades de acción inmediata -> Viz: Tarjetas interactivas en una cuadrícula -> Interacción: Clic para expandir y ver detalles -> Justificación: Organiza las ideas de proyecto de forma visualmente atractiva y fácil de digerir -> Método: Vanilla JS + Tailwind. 4. Plan de 90 Días -> Meta: Convertir la estrategia en un plan de acción tangible -> Viz: Columnas de línea de tiempo -> Interacción: Estática para máxima claridad -> Justificación: Desglosa los próximos pasos de forma clara y secuencial, fomentando la ejecución -> Método: Tailwind CSS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #3D4C5A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+        .active-link, .nav-link:hover {
+            color: #0D9488;
+            border-bottom-color: #0D9488;
+        }
+        .tab-button.active {
+            background-color: #0D9488;
+            color: white;
+        }
+        .tab-button {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .card-expand {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .card-expand.open {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold text-teal-800">
+                    Acción <span class="text-orange-600">Cultural</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#diagnostico" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Diagnóstico</a>
+                    <a href="#estrategia" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Estrategia</a>
+                    <a href="#proyectos" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Proyectos</a>
+                    <a href="#financiacion" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Financiación</a>
+                    <a href="#hoja-de-ruta" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Hoja de Ruta</a>
+                    <a href="#unete" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Únete</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 bg-amber-50 border-t-4 border-amber-200">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-teal-900 leading-tight">Del Capital Político a la Acción Sostenible</h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">Una hoja de ruta interactiva para transformar el impulso de la campaña en un movimiento cultural sostenible y generador de oportunidades para Loja.</p>
+            </div>
+        </section>
+
+        <section id="diagnostico" class="py-16 md:py-24 border-t-4 border-orange-200">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Diagnóstico: Una Propuesta Validada</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Los resultados son el punto de partida. De 807 votantes habilitados, solo la mitad participó. En este contexto, nuestros 112 votos representan el respaldo de más del 28% del electorado activo, una validación contundente de nuestra propuesta.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Análisis de Votación</h3>
+                        <div class="chart-container">
+                            <canvas id="electionChart"></canvas>
+                        </div>
+                        <p class="text-center mt-4 text-sm text-gray-500">Resultados sobre un total de 395 votos emitidos de 807 posibles.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">El Capital Adquirido</h3>
+                        <div class="space-y-6">
+                            <div class="p-6 bg-white rounded-lg shadow-md border-l-4 border-orange-500">
+                                <h4 class="font-bold text-lg text-gray-800">Visión y Liderazgo Colectivo</h4>
+                                <p class="text-gray-600 mt-1">El colectivo Acción Cultural, con Altaira Rojas como vocera, posicionó una visión de cambio clara y legitimada por la comunidad. Este es un logro de todo el equipo.</p>
+                            </div>
+                            <div class="p-6 bg-white rounded-lg shadow-md border-l-4 border-amber-500">
+                                <h4 class="font-bold text-lg text-gray-800">Red Validada y Movilizada</h4>
+                                <p class="text-gray-600 mt-1">Nuestros 112 votos consolidan un núcleo operativo y una base social activa. Somos una comunidad lista para ser canalizada hacia objetivos comunes.</p>
+                            </div>
+                            <div class="p-6 bg-white rounded-lg shadow-md border-l-4 border-teal-500">
+                                <h4 class="font-bold text-lg text-gray-800">Agenda Pública y Legitimidad</h4>
+                                <p class="text-gray-600 mt-1">Instalamos una nueva narrativa sobre transparencia y gestión en el debate cultural de Loja, adueñándonos de esa agenda como colectivo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="estrategia" class="py-16 md:py-24 bg-teal-50/50 border-t-4 border-teal-200">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Estrategia de Sostenibilidad</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Transformamos la energía de la campaña en una estructura organizada y de impacto, operando con cero inversión inicial a través de tres pilares fundamentales.</p>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="p-8 bg-white rounded-lg shadow-lg text-center">
+                        <div class="text-4xl text-teal-600 mb-4">🏛️</div>
+                        <h3 class="text-2xl font-bold mb-3">Veeduría Ciudadana</h3>
+                        <p class="text-gray-600">Convertirnos en un ente de control social para fiscalizar la gestión de la nueva dirección, manteniendo nuestra relevancia y canalizando la energía de la red hacia la transparencia y la rendición de cuentas.</p>
+                    </div>
+                    <div class="p-8 bg-white rounded-lg shadow-lg text-center">
+                        <div class="text-4xl text-teal-600 mb-4">📜</div>
+                        <h3 class="text-2xl font-bold mb-3">Formalización Legal</h3>
+                        <p class="text-gray-600">Elegir la estructura jurídica adecuada es clave para nuestro futuro. Compara las opciones para decidir el modelo que mejor se alinea con nuestra meta de generar trabajo e ingresos para los miembros.</p>
+                    </div>
+                    <div class="p-8 bg-white rounded-lg shadow-lg text-center">
+                        <div class="text-4xl text-teal-600 mb-4">🌐</div>
+                        <h3 class="text-2xl font-bold mb-3">Activación de la Red</h3>
+                        <p class="text-gray-600">Utilizar herramientas digitales gratuitas para mapear el talento, comunicar nuestro propósito y construir una comunidad fuerte con una propuesta de valor clara, convirtiendo simpatizantes en colaboradores activos.</p>
+                    </div>
+                </div>
+
+                <div class="mt-16 bg-white p-8 rounded-xl shadow-xl border">
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-8">Decisión Clave: ¿Corporación o Cooperativa?</h3>
+                    <div class="flex justify-center mb-6">
+                        <div class="inline-flex rounded-md shadow-sm" role="group">
+                            <button type="button" id="cooperativaBtn" class="tab-button active px-6 py-3 text-sm font-medium bg-gray-100 border border-gray-200 rounded-l-lg hover:bg-gray-200">
+                                Cooperativa de Servicios Culturales
+                            </button>
+                            <button type="button" id="corporacionBtn" class="tab-button px-6 py-3 text-sm font-medium bg-gray-100 border-t border-b border-r border-gray-200 rounded-r-lg hover:bg-gray-200">
+                                Corporación Cultural
+                            </button>
+                        </div>
+                    </div>
+                    <div id="cooperativaContent" class="tab-content">
+                        <div class="text-center mb-4"><span class="text-sm font-bold py-1 px-3 rounded-full bg-teal-100 text-teal-800">ALTAMENTE RECOMENDADA</span></div>
+                        <p class="text-center text-gray-600 mb-6">Este modelo se alinea directamente con el objetivo de "generar trabajo e ingresos", transformando la red en una empresa social autogestionada.</p>
+                        <div class="grid md:grid-cols-2 gap-6 text-sm">
+                            <ul class="space-y-3">
+                                <li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✔</span><div><strong class="font-semibold">Propósito:</strong> Económico y social. Generar trabajo y excedentes para los socios.</div></li>
+                                <li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✔</span><div><strong class="font-semibold">Ingresos para Miembros:</strong> Directa. Distribución de excedentes (ganancias) entre socios.</div></li>
+                                <li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✔</span><div><strong class="font-semibold">Ventajas:</strong> Diseñada para la autogestión y sostenibilidad económica. Fomenta la colaboración y el acceso a políticas de fomento de la Economía Popular y Solidaria (EPS).</div></li>
+                            </ul>
+                            <ul class="space-y-3">
+                                <li class="flex items-start"><span class="text-red-500 mr-2 mt-1">✖</span><div><strong class="font-semibold">Desventajas:</strong> Requiere una mentalidad empresarial colectiva. Puede ser percibida como más "comercial".</div></li>
+                                <li class="flex items-start"><span class="text-red-500 mr-2 mt-1">✖</span><div><strong class="font-semibold">Capital Inicial:</strong> Requiere un certificado de depósito del aporte social inicial (monto mínimo definido por los socios).</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="corporacionContent" class="tab-content hidden">
+                        <div class="text-center mb-4"><span class="text-sm font-bold py-1 px-3 rounded-full bg-amber-100 text-amber-800">OPCIÓN TRADICIONAL</span></div>
+                        <p class="text-center text-gray-600 mb-6">Adecuada para un enfoque puramente de incidencia y proyectos financiados por terceros, pero no para el beneficio económico directo de sus miembros.</p>
+                        <div class="grid md:grid-cols-2 gap-6 text-sm">
+                            <ul class="space-y-3">
+                                <li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✔</span><div><strong class="font-semibold">Propósito:</strong> Social y cultural. Promover el arte sin fin de lucro para los miembros.</div></li>
+                                <li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✔</span><div><strong class="font-semibold">Ventajas:</strong> Perfil ideal para recibir donaciones y fondos de cooperación. Estructura reconocida.</div></li>
+                                <li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✔</span><div><strong class="font-semibold">Capital Inicial:</strong> Declaración juramentada de patrimonio (puede ser cero o simbólico).</div></li>
+                            </ul>
+                            <ul class="space-y-3">
+                                <li class="flex items-start"><span class="text-red-500 mr-2 mt-1">✖</span><div><strong class="font-semibold">Ingresos para Miembros:</strong> Indirecta. No hay distribución de utilidades. La remuneración es solo por servicios prestados si la corporación obtiene fondos.</div></li>
+                                <li class="flex items-start"><span class="text-red-500 mr-2 mt-1">✖</span><div><strong class="font-semibold">Desventajas:</strong> Alta dependencia de financiamiento externo. No diseñada para la sostenibilidad económica de los miembros.</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="proyectos" class="py-16 md:py-24 border-t-4 border-amber-200">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Proyectos "Semilla" de Costo Cero</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Iniciativas de autogestión para generar valor inmediato, construir un historial de trabajo y sentar las bases para la monetización, utilizando nuestro principal recurso: el talento de la red.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card bg-white rounded-lg shadow-lg overflow-hidden border">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Ciclo de Talleres "Polinización Cruzada"</h3>
+                            <p class="text-gray-600 mt-2 text-sm">Intercambio de conocimientos dentro de la red. Miembros expertos ofrecen talleres gratuitos o de bajo costo para los demás, facilitados por el colectivo.</p>
+                        </div>
+                        <button class="card-toggle w-full text-left px-6 py-3 bg-gray-50 hover:bg-gray-100 text-teal-700 font-semibold text-sm">Ver detalles ▼</button>
+                        <div class="card-expand">
+                            <div class="p-6 border-t">
+                                <h4 class="font-bold mb-2">Claves de Ejecución:</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                    <li>Costo cero: usar talleres de artistas o espacios virtuales.</li>
+                                    <li>Valor inmediato: capacitación y networking para miembros.</li>
+                                    <li>Recurso: Capital intelectual de la red.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white rounded-lg shadow-lg overflow-hidden border">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Mercado Cultural Itinerante</h3>
+                            <p class="text-gray-600 mt-2 text-sm">Organización de ferias de arte y diseño en espacios públicos, ofreciendo una plataforma de venta directa para los artistas y artesanos de la red.</p>
+                        </div>
+                        <button class="card-toggle w-full text-left px-6 py-3 bg-gray-50 hover:bg-gray-100 text-teal-700 font-semibold text-sm">Ver detalles ▼</button>
+                        <div class="card-expand">
+                            <div class="p-6 border-t">
+                                <h4 class="font-bold mb-2">Claves de Ejecución:</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                    <li>Logística mínima: gestión de permisos municipales.</li>
+                                    <li>Ingresos directos: cada artista gestiona su propio stand y ventas.</li>
+                                    <li>Impacto: Visibilidad del colectivo y recuperación del espacio público.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white rounded-lg shadow-lg overflow-hidden border">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Rutas de Turismo Cultural Comunitario</h3>
+                            <p class="text-gray-600 mt-2 text-sm">Diseño y prototipado de rutas temáticas guiadas por miembros, capitalizando la identidad de Loja como "Capital Cultural del Ecuador".</p>
+                        </div>
+                        <button class="card-toggle w-full text-left px-6 py-3 bg-gray-50 hover:bg-gray-100 text-teal-700 font-semibold text-sm">Ver detalles ▼</button>
+                        <div class="card-expand">
+                            <div class="p-6 border-t">
+                                <h4 class="font-bold mb-2">Claves de Ejecución:</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                    <li>Sin inversión inicial: modelo de "pago a la gorra" para probar demanda.</li>
+                                    <li>Producto único: rutas curadas por artistas locales (ej. "Ruta de Talleres de Artistas").</li>
+                                    <li>Potencial: Generación de ingresos y posicionamiento de Loja.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financiacion" class="py-16 md:py-24 bg-amber-50 border-t-4 border-amber-200">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Ruta hacia la Financiación</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">El financiamiento no es el punto de partida, sino el resultado de un trabajo previo bien ejecutado. Construimos credibilidad a través de la acción para luego acceder a fondos externos.</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="relative border-l-2 border-orange-300">
+                        <div class="mb-8 ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-amber-400 rounded-full -left-3 ring-4 ring-white">1</span>
+                            <div class="p-4 bg-white rounded-lg border shadow-sm">
+                                <h3 class="text-lg font-semibold text-gray-900">Construir un Historial</h3>
+                                <p class="text-sm font-normal text-gray-500">Ejecutar y documentar los proyectos "semilla" para crear un portafolio tangible que demuestre nuestra capacidad de gestión e impacto. Esta es nuestra "moneda de confianza".</p>
+                            </div>
+                        </div>
+                        <div class="mb-8 ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-amber-400 rounded-full -left-3 ring-4 ring-white">2</span>
+                            <div class="p-4 bg-white rounded-lg border shadow-sm">
+                                <h3 class="text-lg font-semibold text-gray-900">Fondos Concursables Nacionales</h3>
+                                <p class="text-sm font-normal text-gray-500">Con personería jurídica y un historial, postular a fondos públicos no reembolsables como los del IFCI (Cultura Viva Comunitaria) y el INPC.</p>
+                            </div>
+                        </div>
+                        <div class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-amber-400 rounded-full -left-3 ring-4 ring-white">3</span>
+                            <div class="p-4 bg-white rounded-lg border shadow-sm">
+                                <h3 class="text-lg font-semibold text-gray-900">Financiamiento Internacional y Alternativo</h3>
+                                <p class="text-sm font-normal text-gray-500">Con un historial más robusto, aspirar a fondos de cooperación internacional (Fondo del Embajador, FIEDS) y explorar el crowdfunding para proyectos específicos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="hoja-de-ruta" class="py-16 md:py-24 border-t-4 border-teal-200">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Plan de Acción de 90 Días</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Pasos concretos para los próximos tres meses. Un checklist para consolidar, formalizar y activar el colectivo de manera inmediata.</p>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="p-6 bg-white rounded-lg border-t-4 border-teal-500 shadow-md">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Mes 1: Consolidar y Comunicar</h3>
+                        <ul class="space-y-3 text-gray-600 text-sm">
+                            <li class="flex"><span class="mr-2">✅</span>Convocar asamblea general con la red de 100 simpatizantes.</li>
+                            <li class="flex"><span class="mr-2">✅</span>Difundir comunicado público sobre la transformación del colectivo.</li>
+                            <li class="flex"><span class="mr-2">✅</span>Presentar solicitud al CPCCS para la Veeduría Ciudadana.</li>
+                            <li class="flex"><span class="mr-2">✅</span>Iniciar debate interno sobre la figura jurídica a adoptar.</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg border-t-4 border-orange-500 shadow-md">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Mes 2: Formalizar y Planificar</h3>
+                        <ul class="space-y-3 text-gray-600 text-sm">
+                            <li class="flex"><span class="mr-2">✅</span>Presentar documentación para la personería jurídica elegida.</li>
+                            <li class="flex"><span class="mr-2">✅</span>Crear y poblar la base de datos de la red (mapeo de habilidades).</li>
+                            <li class="flex"><span class="mr-2">✅</span>Diseñar y convocar el primer proyecto "semilla" (ej. taller).</li>
+                            <li class="flex"><span class="mr-2">✅</span>Lanzar campaña para que los miembros se registren en el RUAC.</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg border-t-4 border-amber-500 shadow-md">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Mes 3: Activar y Ejecutar</h3>
+                        <ul class="space-y-3 text-gray-600 text-sm">
+                            <li class="flex"><span class="mr-2">✅</span>Ejecutar el primer taller o feria. Documentar todo el proceso.</li>
+                            <li class="flex"><span class="mr-2">✅</span>Establecer calendario de redes sociales y enviar primer boletín.</li>
+                            <li class="flex"><span class="mr-2">✅</span>Realizar primera reunión de trabajo de la Veeduría (si está acreditada).</li>
+                            <li class="flex"><span class="mr-2">✅</span>Esbozar propuesta para la convocatoria "Cultura Viva Comunitaria" del IFCI.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="unete" class="py-16 md:py-24 bg-teal-50/50 border-t-4 border-teal-200">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-800">Únete a la Red</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Si eres artista o actor cultural en Loja y compartes nuestra visión, regístrate. Juntos podemos construir el cambio que propusimos.</p>
+                </div>
+                <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border">
+                    <form id="registro-form" action="https://www.antoniorigo.com/accion-cultural" method="POST" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+                                <input type="text" name="nombre" id="nombre" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="cedula" class="block text-sm font-medium text-gray-700">Cédula</label>
+                                <input type="text" name="cedula" id="cedula" required pattern="[0-9]{10}" title="Debe ingresar 10 dígitos" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" name="email" id="email" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                                <input type="tel" name="telefono" id="telefono" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             <div>
+                                <label for="edad" class="block text-sm font-medium text-gray-700">Edad (Opcional)</label>
+                                <input type="number" name="edad" id="edad" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="sexo" class="block text-sm font-medium text-gray-700">Sexo (Opcional)</label>
+                                <select id="sexo" name="sexo" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+                                    <option>Prefiero no especificar</option>
+                                    <option>Femenino</option>
+                                    <option>Masculino</option>
+                                    <option>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div>
+                            <label for="disciplina" class="block text-sm font-medium text-gray-700">Disciplina Artística Principal</label>
+                            <select id="disciplina" name="disciplina" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+                                <option>Artes Escénicas (Teatro, Danza)</option>
+                                <option>Artes Plásticas y Visuales</option>
+                                <option>Música</option>
+                                <option>Literatura y Edición</option>
+                                <option>Cine y Audiovisuales</option>
+                                <option>Gestión y Producción Cultural</option>
+                                <option>Artesanía</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="habilidades" class="block text-sm font-medium text-gray-700">Habilidades Secundarias</label>
+                            <textarea id="habilidades" name="habilidades" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" placeholder="Ej: Diseño gráfico, contabilidad, redes sociales, producción técnica, redacción..."></textarea>
+                        </div>
+                         <div>
+                            <label class="block text-sm font-medium text-gray-700">Áreas de Interés para Colaborar</label>
+                            <div class="mt-2 space-y-2">
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="interes-formacion" name="interes-formacion" type="checkbox" class="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="interes-formacion" class="font-medium text-gray-700">Formación y Talleres</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="interes-proyectos" name="interes-proyectos" type="checkbox" class="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="interes-proyectos" class="font-medium text-gray-700">Proyectos Comunitarios</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="interes-incidencia" name="interes-incidencia" type="checkbox" class="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="interes-incidencia" class="font-medium text-gray-700">Incidencia Política y Veeduría</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="disponibilidad" class="block text-sm font-medium text-gray-700">Disponibilidad</label>
+                                <select id="disponibilidad" name="disponibilidad" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+                                    <option>Algunas horas a la semana</option>
+                                    <option>Fines de semana</option>
+                                    <option>Para proyectos específicos</option>
+                                    <option>Disponibilidad completa</option>
+                                </select>
+                            </div>
+                             <div>
+                                <label for="ruac" class="block text-sm font-medium text-gray-700">¿Inscrito en el RUAC?</label>
+                                <select id="ruac" name="ruac" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+                                    <option>Sí</option>
+                                    <option>No</option>
+                                    <option>En trámite</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="relative flex items-start">
+                            <div class="flex items-center h-5">
+                                <input id="privacy" name="privacy" type="checkbox" required class="focus:ring-teal-500 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="privacy" class="font-medium text-gray-700">Acepto el uso de mis datos</label>
+                                <p class="text-gray-500">Al registrarte, aceptas que tus datos sean utilizados por el colectivo Acción Cultural para fines de comunicación y organización, en conformidad con la Ley Orgánica de Protección de Datos Personales del Ecuador.</p>
+                            </div>
+                        </div>
+                        <div id="form-message" class="text-sm text-center"></div>
+                        <div>
+                            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors">
+                                Enviar Registro
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-bold text-lg">Acción Cultural Loja</p>
+            <p class="text-sm text-gray-400 mt-1">Construyendo el cambio que propusimos. Juntos.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const electionData = {
+                labels: ['Ausentes', 'Acción Cultural', 'Incumbente', 'Lista 3', 'Lista 4', 'Nulos y Blancos'],
+                datasets: [{
+                    label: 'Votos',
+                    data: [412, 112, 214, 53, 10, 5],
+                    backgroundColor: [
+                        '#f3e2d7',
+                        '#F97316', 
+                        '#6B7280',
+                        '#14B8A6', 
+                        '#EAB308',
+                        '#E5E7EB'  
+                    ],
+                    borderColor: '#FDFBF8',
+                    borderWidth: 2,
+                    hoverOffset: 8
+                }]
+            };
+
+            const config = {
+                type: 'doughnut',
+                data: electionData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + ' votos';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                },
+            };
+
+            const electionChartCtx = document.getElementById('electionChart').getContext('2d');
+            new Chart(electionChartCtx, config);
+
+            const cooperativaBtn = document.getElementById('cooperativaBtn');
+            const corporacionBtn = document.getElementById('corporacionBtn');
+            const cooperativaContent = document.getElementById('cooperativaContent');
+            const corporacionContent = document.getElementById('corporacionContent');
+
+            cooperativaBtn.addEventListener('click', () => {
+                cooperativaBtn.classList.add('active');
+                corporacionBtn.classList.remove('active');
+                cooperativaContent.classList.remove('hidden');
+                corporacionContent.classList.add('hidden');
+            });
+
+            corporacionBtn.addEventListener('click', () => {
+                corporacionBtn.classList.add('active');
+                cooperativaBtn.classList.remove('active');
+                corporacionContent.classList.remove('hidden');
+                cooperativaContent.classList.add('hidden');
+            });
+            
+            const cardToggles = document.querySelectorAll('.card-toggle');
+            cardToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const expandSection = toggle.nextElementSibling;
+                    expandSection.classList.toggle('open');
+                    toggle.textContent = expandSection.classList.contains('open') ? 'Ocultar detalles ▲' : 'Ver detalles ▼';
+                });
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active-link');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active-link');
+                    }
+                });
+            });
+
+            const form = document.getElementById('registro-form');
+            const formMessage = document.getElementById('form-message');
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const nombre = document.getElementById('nombre').value.trim();
+                const cedula = document.getElementById('cedula').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const telefono = document.getElementById('telefono').value.trim();
+                const canton = document.getElementById('canton').value.trim();
+                const privacy = document.getElementById('privacy').checked;
+
+                formMessage.textContent = '';
+                formMessage.classList.remove('text-red-600', 'text-green-600');
+
+                let errors = [];
+                if (!nombre) errors.push("Nombre");
+                if (!cedula) errors.push("Cédula");
+                if (!email) errors.push("Email");
+                if (!telefono) errors.push("Teléfono");
+                if (!canton) errors.push("Cantón");
+
+                if (errors.length > 0) {
+                    formMessage.textContent = `Por favor, complete los siguientes campos: ${errors.join(', ')}.`;
+                    formMessage.classList.add('text-red-600');
+                    return;
+                }
+
+                if (!/^[0-9]{10}$/.test(cedula)) {
+                    formMessage.textContent = 'Por favor, ingrese un número de cédula válido de 10 dígitos.';
+                    formMessage.classList.add('text-red-600');
+                    return;
+                }
+
+                if (!privacy) {
+                    formMessage.textContent = 'Debe aceptar la política de uso de datos para continuar.';
+                    formMessage.classList.add('text-red-600');
+                    return;
+                }
+
+                const formData = new FormData(form);
+                const formAction = form.getAttribute('action');
+                
+                submitButton.disabled = true;
+                submitButton.textContent = 'Enviando...';
+
+                fetch(formAction, {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message.includes('éxito')) {
+                        formMessage.textContent = data.message;
+                        formMessage.classList.add('text-green-600');
+                        form.reset();
+                    } else {
+                        throw new Error(data.message);
+                    }
+                })
+                .catch(error => {
+                    formMessage.textContent = `Hubo un error: ${error.message}`;
+                    formMessage.classList.add('text-red-600');
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Enviar Registro';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
