@@ -247,7 +247,7 @@
                                     <p class="text-gray-500">Al registrarte, aceptas que tus datos sean utilizados por la Red Acción Cultural para fines de comunicación y organización, en conformidad con la Ley Orgánica de Protección de Datos Personales del Ecuador.</p>
                                 </div>
                             </div>
-                            <div id="form-message" class="text-sm text-center"></div>
+                            <div id="form-message" class="text-sm text-center min-h-[1.25rem]"></div>
                             <div>
                                 <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-bold text-white bg-brand-orange hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-orange transition-all duration-300 hover:shadow-lg hover:-translate-y-1 font-roboto">
                                     ENVIAR REGISTRO
@@ -344,21 +344,17 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message && data.message.toLowerCase().includes('éxito')) {
-                        // Select the form's parent container to hide everything
-                        const formWrapper = form.parentElement;
-                        formWrapper.innerHTML = ''; // Clear the form content
+                        // Hide the form and show the success message
+                        form.style.display = 'none';
+                        shareContainer.classList.remove('hidden');
                         
-                        // Create and append the success message container
-                        const successMessage = document.getElementById('share-container').cloneNode(true);
-                        successMessage.classList.remove('hidden');
-                        formWrapper.appendChild(successMessage);
-                        
+                        // Set up share links
                         const pageUrl = encodeURIComponent(window.location.href);
                         const shareText = encodeURIComponent('¡Súmate a la Red Acción Cultural! Un espacio para potenciar la cultura en Loja. #RedAccionCulturalLoja');
                         
-                        successMessage.querySelector('#share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-                        successMessage.querySelector('#share-twitter').href = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${shareText}`;
-                        successMessage.querySelector('#share-whatsapp').href = `https://api.whatsapp.com/send?text=${shareText}%20${pageUrl}`;
+                        shareContainer.querySelector('#share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+                        shareContainer.querySelector('#share-twitter').href = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${shareText}`;
+                        shareContainer.querySelector('#share-whatsapp').href = `https://api.whatsapp.com/send?text=${shareText}%20${pageUrl}`;
                     } else {
                         throw new Error(data.message || 'Respuesta inesperada del servidor.');
                     }
